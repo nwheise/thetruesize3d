@@ -12,6 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev      # Start Vite dev server (http://localhost:5173)
 npm run build    # Production build → dist/
 npm run preview  # Serve production build locally
+npm run deploy   # Build and deploy to GitHub Pages (gh-pages branch)
 ```
 
 No test suite exists.

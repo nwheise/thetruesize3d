@@ -53,6 +53,14 @@ npm run build
 
 The production files will be in the `dist/` directory.
 
+### Deploy to GitHub Pages
+
+```bash
+npm run deploy
+```
+
+This builds the project and publishes the `dist/` folder to the `gh-pages` branch. The live site is available at **https://nwheise.github.io/worldview/**.
+
 ## Usage
 
 1. **Select a Region**: Use the search field (countries and admin1 subdivisions) or click on a country on the globe
