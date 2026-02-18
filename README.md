@@ -5,7 +5,7 @@ An interactive 3D globe web application that allows users to compare the true si
 ## Features
 
 - **Interactive 3D Globe**: Rotate and zoom with mouse/touch controls
-- **Country & Subdivision Visualization**: Countries rendered with deterministic colors and black outlines; admin1 subdivision borders drawn on top, color-matched to their country
+- **Country & Subdivision Visualization**: Countries rendered with deterministic colors and flush black outlines; admin1 subdivision borders drawn on top, color-matched to their country
 - **Hover Tooltips**: Hover over any country or subdivision on the globe to see its name in a tooltip
 - **High-Resolution Borders**: 50m-resolution country borders for detailed coastlines
 - **Size Comparison**: Overlay any country or admin1 subdivision on the globe to compare its true size with other regions

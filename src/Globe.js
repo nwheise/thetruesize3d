@@ -185,7 +185,7 @@ export class Globe {
       }
 
       // Create border line
-      const points = coordsToVectors(ring, 5.02);
+      const points = coordsToVectors(ring, 5.011);
       const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
       const line = new THREE.Line(lineGeometry, lineMaterial);
       line.userData = { countryId: country.id };
@@ -371,7 +371,7 @@ export class Globe {
 
       rings.forEach(ring => {
         // Subdivision border lines just above country borders
-        const points = coordsToVectors(ring, 5.021);
+        const points = coordsToVectors(ring, 5.012);
         const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
         const line = new THREE.Line(lineGeometry, lineMaterial);
         this.countryGroup.add(line);
