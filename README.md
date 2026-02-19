@@ -1,4 +1,4 @@
-# WorldView - Interactive 3D Globe
+# TheTrueSize3D - Interactive 3D Globe
 
 An interactive 3D globe web application that allows users to compare the true sizes of countries and regions by overlaying them on each other. Inspired by [thetruesize.com](https://thetruesize.com), it addresses the common misconception about country sizes caused by traditional 2D map projections (Mercator distortion).
 
@@ -55,7 +55,7 @@ The production files will be in the `dist/` directory.
 
 ### Deploy to GitHub Pages
 
-The live site is hosted at **https://nwheise.github.io/worldview/**.
+The live site is hosted at **https://thetruesize3d.com**.
 
 **First-time setup** (only needed once):
 
@@ -87,7 +87,7 @@ This builds the project and publishes the `dist/` folder to the `gh-pages` branc
 ## Project Structure
 
 ```
-worldview/
+thetruesize3d/
 ├── package.json
 ├── vite.config.js          # Vite config (sets base path for GitHub Pages)
 ├── index.html              # HTML structure, UI, and SVG compass dial
@@ -96,7 +96,7 @@ worldview/
 │       ├── countries-50m.json                      # world-atlas TopoJSON (50m)
 │       └── ne_50m_admin_1_states_provinces.geojson # Natural Earth admin1 GeoJSON
 ├── src/
-│   ├── main.js            # Application entry and orchestration (WorldViewApp)
+│   ├── main.js            # Application entry and orchestration (TheTrueSize3DApp)
 │   ├── Globe.js           # Three.js scene and globe rendering (radius 5.0)
 │   ├── CountryLoader.js   # TopoJSON fetch, arc-stitch, and GeoJSON conversion
 │   ├── SubdivisionLoader.js # Natural Earth admin1 GeoJSON fetch and parse

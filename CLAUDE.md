@@ -19,7 +19,7 @@ No test suite exists.
 
 ## Architecture
 
-WorldView is a vanilla JS + Three.js app with no framework. `src/main.js` (`WorldViewApp` class) is the orchestrator — it instantiates everything else and wires up events.
+TheTrueSize3D is a vanilla JS + Three.js app with no framework. `src/main.js` (`TheTrueSize3DApp` class) is the orchestrator — it instantiates everything else and wires up events.
 
 **Data pipeline:**
 - `CountryLoader.js` fetches `world-atlas@2` TopoJSON (50m resolution) from `public/data/countries-50m.json` (bundled with the site) and converts it to GeoJSON using a custom arc-stitching parser (delta-decode → stitch → GeoJSON features).
