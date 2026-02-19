@@ -7,7 +7,7 @@ import { CountrySelector } from './CountrySelector.js';
 /**
  * Main application entry point
  */
-class WorldViewApp {
+class TheTrueSize3DApp {
   constructor() {
     this.canvas = document.getElementById('globe-canvas');
     this.loadingElement = document.getElementById('loading');
@@ -194,7 +194,7 @@ class WorldViewApp {
 
 // Initialize the application when DOM is ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => new WorldViewApp());
+  document.addEventListener('DOMContentLoaded', () => new TheTrueSize3DApp());
 } else {
-  new WorldViewApp();
+  new TheTrueSize3DApp();
 }
