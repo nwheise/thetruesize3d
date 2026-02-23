@@ -12,7 +12,7 @@ An interactive 3D globe web application that allows users to compare the true si
 - **Screen-Fixed Overlays**: Overlays stay at their screen position while the globe rotates freely underneath
 - **Drag to Reposition**: Click and drag any overlay to a new position on the screen
 - **Search**: Per-slot search field covering both countries and admin1 subdivisions
-- **Compass Dial**: Drag the compass ring to rotate all overlays together, independent of globe rotation
+- **Per-Slot Compass Dials**: Each overlay slot has its own mini compass — drag it to rotate that overlay independently
 - **Help Panel**: Click `?` in the controls panel to reveal a usage guide
 - **Real Geographic Data**: world-atlas TopoJSON (countries) + Natural Earth 50m admin1 GeoJSON (subdivisions)
 
@@ -83,7 +83,7 @@ This builds the project and publishes the `dist/` folder to the `gh-pages` branc
 2. **Add More Overlays**: Click **+ Add Overlay** to add a second or third region (up to 3, in red/blue/green)
 3. **Drag Overlays**: Click and drag any overlay to reposition it on the screen; the globe spins freely underneath
 4. **Compare Sizes**: Rotate the globe while the overlays stay screen-fixed to compare sizes across different regions
-5. **Rotate Overlay**: Drag the compass dial ring to rotate all overlays together around the view axis
+5. **Rotate Overlay**: Drag a slot's compass dial to rotate that overlay independently around the view axis
 6. **Remove a Slot**: Click `×` next to a search field to clear that overlay
 7. **Help**: Click the `?` button at the top of the controls panel to show/hide the usage guide
 8. **Explore**: Try overlaying Greenland on Africa to see how Mercator projection distorts sizes!
@@ -94,7 +94,7 @@ This builds the project and publishes the `dist/` folder to the `gh-pages` branc
 thetruesize3d/
 ├── package.json
 ├── vite.config.js          # Vite config (sets base path for GitHub Pages)
-├── index.html              # HTML structure, UI, and SVG compass dial
+├── index.html              # HTML structure and UI
 ├── public/
 │   └── data/
 │       ├── countries-50m.json                      # world-atlas TopoJSON (50m)
@@ -138,7 +138,7 @@ function latLonToVector3(lat, lon, radius) {
 - Up to 3 overlay slots, each a `THREE.Group` at radius **5.005**
 - Each slot stores `originalCentroidDir` (fixed world-space centroid) and `displayNDC` (screen-space `THREE.Vector2`)
 - Every frame, `displayNDC` is re-projected to a world-space direction via analytic ray–sphere intersection against the globe sphere (radius 5.0) using the current camera — this is what keeps overlays fixed on screen while the globe rotates
-- Rotation matrix maps `originalCentroidDir → targetDir`; compass `userRotation` applied as `makeRotationAxis(cameraDir, -userRotation)`
+- Rotation matrix maps `originalCentroidDir → targetDir`; each slot's `userRotation` applied independently as `makeRotationAxis(cameraDir, -slot.userRotation)`
 - Overlay colors: red (`0xff3333`), blue (`0x4488ff`), green (`0x33cc66`)
 
 ### Data Pipeline

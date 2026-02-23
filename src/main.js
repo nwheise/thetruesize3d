@@ -16,14 +16,8 @@ class TheTrueSize3DApp {
     this.canvas = document.getElementById('globe-canvas');
     this.loadingElement = document.getElementById('loading');
 
-    // Compass elements
-    this.compassControl = document.getElementById('compass-control');
-    this.compassSvg = document.getElementById('compass');
-    this.compassOuter = document.getElementById('compass-outer');
-    this.compassRotation = 0; // radians
-
     // Multi-slot state
-    this.overlaySlots = []; // { slotIndex, selector, rowEl }
+    this.overlaySlots = []; // { slotIndex, selector, rowEl, compassContainer, outerG, compassRotation }
     this.allItems = [];     // unified country + subdivision list (set after load)
 
     this.init();
@@ -74,7 +68,6 @@ class TheTrueSize3DApp {
       this.addOverlaySlot();
 
       this.setupTooltip();
-      this.setupCompass();
       this.setupOverlayDrag();
       this.setupHelpPanel();
       this.startOverlayUpdate();
@@ -127,11 +120,110 @@ class TheTrueSize3DApp {
     clearBtn.textContent = '×';
     clearBtn.title = 'Remove this overlay';
 
+    // --- Build inline 36×36 SVG compass ---
+    const compassContainer = document.createElement('div');
+    compassContainer.className = 'slot-compass hidden';
+
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('width', '36');
+    svg.setAttribute('height', '36');
+    svg.setAttribute('viewBox', '-20 -20 40 40');
+    svg.classList.add('slot-compass-svg');
+
+    const outerG = document.createElementNS(svgNS, 'g');
+    // Background circle
+    const bg = document.createElementNS(svgNS, 'circle');
+    bg.setAttribute('cx', '0'); bg.setAttribute('cy', '0'); bg.setAttribute('r', '16');
+    bg.setAttribute('fill', 'rgba(26,26,46,0.8)'); bg.setAttribute('stroke', '#444'); bg.setAttribute('stroke-width', '1');
+    outerG.appendChild(bg);
+    // Tick marks (N, E, S, W)
+    const ticks = [
+      { x1: 0, y1: -16, x2: 0, y2: -12, stroke: '#888' },
+      { x1: 16, y1: 0, x2: 12, y2: 0, stroke: '#555' },
+      { x1: 0, y1: 16, x2: 0, y2: 12, stroke: '#555' },
+      { x1: -16, y1: 0, x2: -12, y2: 0, stroke: '#555' },
+    ];
+    ticks.forEach(t => {
+      const line = document.createElementNS(svgNS, 'line');
+      line.setAttribute('x1', t.x1); line.setAttribute('y1', t.y1);
+      line.setAttribute('x2', t.x2); line.setAttribute('y2', t.y2);
+      line.setAttribute('stroke', t.stroke); line.setAttribute('stroke-width', '1');
+      outerG.appendChild(line);
+    });
+    // "N" label
+    const nLabel = document.createElementNS(svgNS, 'text');
+    nLabel.setAttribute('x', '0'); nLabel.setAttribute('y', '-17');
+    nLabel.setAttribute('text-anchor', 'middle'); nLabel.setAttribute('fill', '#fff');
+    nLabel.setAttribute('font-size', '7'); nLabel.setAttribute('font-weight', 'bold');
+    nLabel.textContent = 'N';
+    outerG.appendChild(nLabel);
+    svg.appendChild(outerG);
+    // Center dot
+    const centerDot = document.createElementNS(svgNS, 'circle');
+    centerDot.setAttribute('cx', '0'); centerDot.setAttribute('cy', '0'); centerDot.setAttribute('r', '2');
+    centerDot.setAttribute('fill', '#ccc');
+    svg.appendChild(centerDot);
+
+    compassContainer.appendChild(svg);
+
     row.appendChild(dot);
     row.appendChild(searchWrapper);
     row.appendChild(clearBtn);
+    row.appendChild(compassContainer);
 
     document.getElementById('overlay-slots').appendChild(row);
+
+    // --- Per-slot compass drag ---
+    let compassRotation = 0;
+    let dragging = false;
+    let dragStartAngle = 0;
+    let rotationAtStart = 0;
+
+    const getPointerAngle = (clientX, clientY) => {
+      const rect = svg.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      return Math.atan2(clientX - cx, -(clientY - cy));
+    };
+
+    const onStart = (clientX, clientY) => {
+      dragging = true;
+      dragStartAngle = getPointerAngle(clientX, clientY);
+      rotationAtStart = compassRotation;
+    };
+
+    const onMove = (clientX, clientY) => {
+      if (!dragging) return;
+      const angle = getPointerAngle(clientX, clientY);
+      compassRotation = rotationAtStart + (angle - dragStartAngle);
+      const deg = compassRotation * 180 / Math.PI;
+      outerG.setAttribute('transform', `rotate(${deg})`);
+      this.overlay.setRotation(slotIndex, compassRotation);
+    };
+
+    const onEnd = () => { dragging = false; };
+
+    // Mouse
+    svg.addEventListener('mousedown', (e) => {
+      onStart(e.clientX, e.clientY);
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY));
+    document.addEventListener('mouseup', onEnd);
+
+    // Touch
+    svg.addEventListener('touchstart', (e) => {
+      const t = e.touches[0];
+      onStart(t.clientX, t.clientY);
+      e.preventDefault();
+    });
+    document.addEventListener('touchmove', (e) => {
+      if (!dragging) return;
+      const t = e.touches[0];
+      onMove(t.clientX, t.clientY);
+    });
+    document.addEventListener('touchend', onEnd);
 
     // --- CountrySelector ---
     const selector = new CountrySelector(input, list, clearBtn);
@@ -139,8 +231,7 @@ class TheTrueSize3DApp {
 
     selector.onSelect((feature) => {
       this.overlay.show(feature, slotIndex);
-      // Show compass on first overlay
-      this.compassControl.classList.remove('hidden');
+      compassContainer.classList.remove('hidden');
     });
 
     selector.onClear(() => {
@@ -148,7 +239,7 @@ class TheTrueSize3DApp {
       this.removeOverlaySlot(slotIndex);
     });
 
-    this.overlaySlots.push({ slotIndex, selector, rowEl: row });
+    this.overlaySlots.push({ slotIndex, selector, rowEl: row, compassContainer, outerG, compassRotation: () => compassRotation });
 
     // Show/hide "+ Add Overlay" button
     this._updateAddButton();
@@ -167,13 +258,6 @@ class TheTrueSize3DApp {
     this.overlaySlots.splice(idx, 1);
 
     this._updateAddButton();
-
-    if (!this.overlay.hasAnyOverlay()) {
-      this.compassControl.classList.add('hidden');
-      this.compassRotation = 0;
-      this.compassOuter.setAttribute('transform', 'rotate(0)');
-      this.overlay.setRotation(0);
-    }
   }
 
   /** Show + Add Overlay if < 3 slots; hide it at 3. */
@@ -207,60 +291,6 @@ class TheTrueSize3DApp {
     document.getElementById('add-overlay-btn').addEventListener('click', () => {
       this.addOverlaySlot();
     });
-  }
-
-  /**
-   * Draggable compass: click-and-drag rotates the outer ring and all overlays.
-   * Supports both mouse and touch.
-   */
-  setupCompass() {
-    let dragging = false;
-    let dragStartAngle = 0;
-    let rotationAtStart = 0;
-
-    const getPointerAngle = (clientX, clientY) => {
-      const rect = this.compassSvg.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      return Math.atan2(clientX - cx, -(clientY - cy));
-    };
-
-    const onStart = (clientX, clientY) => {
-      dragging = true;
-      dragStartAngle = getPointerAngle(clientX, clientY);
-      rotationAtStart = this.compassRotation;
-    };
-
-    const onMove = (clientX, clientY) => {
-      if (!dragging) return;
-      const angle = getPointerAngle(clientX, clientY);
-      this.compassRotation = rotationAtStart + (angle - dragStartAngle);
-      const deg = this.compassRotation * 180 / Math.PI;
-      this.compassOuter.setAttribute('transform', `rotate(${deg})`);
-      this.overlay.setRotation(this.compassRotation);
-    };
-
-    const onEnd = () => { dragging = false; };
-
-    // Mouse
-    this.compassSvg.addEventListener('mousedown', (e) => {
-      onStart(e.clientX, e.clientY);
-      e.preventDefault();
-    });
-    document.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY));
-    document.addEventListener('mouseup', onEnd);
-
-    // Touch
-    this.compassSvg.addEventListener('touchstart', (e) => {
-      const t = e.touches[0];
-      onStart(t.clientX, t.clientY);
-      e.preventDefault();
-    });
-    document.addEventListener('touchmove', (e) => {
-      const t = e.touches[0];
-      onMove(t.clientX, t.clientY);
-    });
-    document.addEventListener('touchend', onEnd);
   }
 
   /**

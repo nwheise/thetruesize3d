@@ -9,8 +9,8 @@ const NUM_SLOTS = 3;
  *
  * Each slot has its own Three.js Group whose orientation is updated every frame
  * so the country's centroid faces the camera and geographic north maps to
- * screen-up.  A shared `userRotation` (compass dial) is applied to all active
- * slots simultaneously.
+ * screen-up.  Each slot has its own `userRotation` (compass dial) so regions
+ * can be rotated independently.
  */
 // Globe radius must match Globe.js
 const GLOBE_RADIUS = 5.0;
@@ -19,7 +19,6 @@ export class CountryOverlay {
   constructor(scene, camera) {
     this.scene = scene;
     this.camera = camera;
-    this.userRotation = 0;
     this._raycaster = new THREE.Raycaster();
 
     this.slots = Array.from({ length: NUM_SLOTS }, (_, i) => ({
@@ -27,6 +26,7 @@ export class CountryOverlay {
       country: null,
       originalCentroidDir: null, // fixed direction computed at show(); never changes
       displayNDC: null,          // THREE.Vector2 in NDC; null = always face camera (center)
+      userRotation: 0,           // per-slot compass rotation in radians
       group: new THREE.Group(),
       color: OVERLAY_COLORS[i],
     }));
@@ -97,6 +97,7 @@ export class CountryOverlay {
     slot.country = null;
     slot.originalCentroidDir = null;
     slot.displayNDC = null;
+    slot.userRotation = 0;
     slot.group.quaternion.identity();
   }
 
@@ -106,11 +107,12 @@ export class CountryOverlay {
   }
 
   /**
-   * Set shared rotation from the compass dial.
+   * Set rotation for a single slot's compass dial.
+   * @param {number} slotIndex
    * @param {number} radians
    */
-  setRotation(radians) {
-    this.userRotation = radians;
+  setRotation(slotIndex, radians) {
+    this.slots[slotIndex].userRotation = radians;
   }
 
   /**
@@ -173,6 +175,13 @@ export class CountryOverlay {
         targetDir = cameraDir;
       }
 
+      // Counter-rotate targetDir so the premultiplied userRot cancels out for position,
+      // while still applying compass rotation to the overlay's orientation.
+      if (slot.userRotation !== 0) {
+        const compensate = new THREE.Matrix4().makeRotationAxis(cameraDir, slot.userRotation);
+        targetDir = targetDir.clone().applyMatrix4(compensate);
+      }
+
       const srcFrame = this._localFrame(slot.originalCentroidDir);
       const tgtFrame = this._localFrame(targetDir);
 
@@ -181,8 +190,8 @@ export class CountryOverlay {
 
       const rotMat = tgtMat.clone().multiply(srcMat.clone().invert());
 
-      if (this.userRotation !== 0) {
-        const userRot = new THREE.Matrix4().makeRotationAxis(cameraDir, -this.userRotation);
+      if (slot.userRotation !== 0) {
+        const userRot = new THREE.Matrix4().makeRotationAxis(cameraDir, -slot.userRotation);
         rotMat.premultiply(userRot);
       }
 
