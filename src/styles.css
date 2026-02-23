@@ -179,32 +179,26 @@ body {
   display: none;
 }
 
-/* ── Compass dial ─────────────────────────────────────── */
+/* ── Per-slot compass dial ────────────────────────────── */
 
-#compass-control {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 10;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(10px);
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+.slot-compass {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
   user-select: none;
   touch-action: none;
 }
 
-#compass-control.hidden {
+.slot-compass.hidden {
   display: none;
 }
 
-#compass {
+.slot-compass-svg {
   display: block;
   cursor: grab;
 }
 
-#compass:active {
+.slot-compass-svg:active {
   cursor: grabbing;
 }
 
