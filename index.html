@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TheTrueSize3D - Compare Country Sizes</title>
-  <script type="module" crossorigin src="/assets/index-D5snJjs8.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-CD9NEbeJ.css">
+  <script type="module" crossorigin src="/assets/index-CeqaRmgV.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-B0E0ewuh.css">
 </head>
 <body>
   <div id="app">
@@ -19,7 +19,7 @@
           <li>Search for a country or region to overlay it on the globe</li>
           <li>Click <b>+ Add Overlay</b> to compare up to 3 regions</li>
           <li>Click and drag an overlay to reposition it</li>
-          <li>Drag the compass dial to rotate all overlays</li>
+          <li>Drag a slot's compass to rotate its overlay</li>
           <li>Drag the globe to spin it</li>
         </ul>
       </div>
@@ -31,22 +31,6 @@
         &middot; <a href="https://github.com/nwheise/thetruesize3d" target="_blank" rel="noopener">GitHub</a>
         &middot; <a href="https://github.com/nwheise/thetruesize3d/issues" target="_blank" rel="noopener">Feedback</a>
       </div>
-    </div>
-    <div id="compass-control" class="hidden">
-      <svg id="compass" width="80" height="80" viewBox="-50 -50 100 100">
-        <g id="compass-outer">
-          <circle cx="0" cy="0" r="38" fill="rgba(26,26,46,0.8)" stroke="#444" stroke-width="1.5"/>
-          <line x1="0" y1="-38" x2="0" y2="-32" stroke="#888" stroke-width="1"/>
-          <line x1="38" y1="0" x2="32" y2="0" stroke="#555" stroke-width="1"/>
-          <line x1="0" y1="38" x2="0" y2="32" stroke="#555" stroke-width="1"/>
-          <line x1="-38" y1="0" x2="-32" y2="0" stroke="#555" stroke-width="1"/>
-          <text x="0" y="-41" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">N</text>
-          <text x="42" y="1" text-anchor="start" fill="#888" font-size="9" dominant-baseline="central">E</text>
-          <text x="0" y="47" text-anchor="middle" fill="#888" font-size="9">S</text>
-          <text x="-42" y="1" text-anchor="end" fill="#888" font-size="9" dominant-baseline="central">W</text>
-        </g>
-        <circle cx="0" cy="0" r="3" fill="#ccc"/>
-      </svg>
     </div>
     <div id="tooltip"></div>
     <canvas id="globe-canvas"></canvas>
