@@ -6,6 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Claude must never work directly on main branch. Always use a feature branch.
 - Claude must always update the CLAUDE.md and README.md files when committing changes.
 - Claude must never try to deploy changes from any branch except for main.
+- Claude must always build the latest changes on main branch before deploying.
 
 ## Commands
 
