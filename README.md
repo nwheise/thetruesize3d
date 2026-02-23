@@ -96,6 +96,7 @@ thetruesize3d/
 ├── vite.config.js          # Vite config (sets base path for GitHub Pages)
 ├── index.html              # HTML structure and UI
 ├── public/
+│   ├── CNAME                                         # Custom domain for GitHub Pages
 │   └── data/
 │       ├── countries-50m.json                      # world-atlas TopoJSON (50m)
 │       └── ne_50m_admin_1_states_provinces.geojson # Natural Earth admin1 GeoJSON
