@@ -405,15 +405,14 @@ class TheTrueSize3DApp {
     const controls = document.getElementById('controls');
     const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
 
-    // Start collapsed on mobile so globe is fully visible
+    // Start expanded on mobile so controls are visible on first visit
     if (isMobile()) {
-      controls.classList.add('mobile-collapsed');
-      toggleBtn.textContent = '▼';
+      toggleBtn.textContent = '▲ Hide';
     }
 
     toggleBtn.addEventListener('click', () => {
       const nowCollapsed = controls.classList.toggle('mobile-collapsed');
-      toggleBtn.textContent = nowCollapsed ? '▼' : '▲';
+      toggleBtn.textContent = nowCollapsed ? '▼ Menu' : '▲ Hide';
     });
 
     // Remove collapsed state when switching back to desktop width
