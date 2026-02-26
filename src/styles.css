@@ -18,12 +18,14 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100dvh; /* dynamic viewport height — excludes iOS Safari address bar */
 }
 
 #globe-canvas {
   display: block;
   width: 100%;
   height: 100%;
+  touch-action: none; /* let OrbitControls handle all touch events */
 }
 
 #controls {
@@ -230,6 +232,12 @@ body {
   margin-bottom: 12px;
 }
 
+#controls-header-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 #controls-title {
   color: #ddd;
   font-size: 13px;
@@ -255,6 +263,29 @@ body {
 }
 
 #help-btn:hover {
+  border-color: #4a9eff;
+  color: #4a9eff;
+}
+
+/* ── Mobile panel toggle button ───────────────────────── */
+
+#mobile-toggle {
+  display: none; /* hidden on desktop */
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  border: 1px solid #555;
+  background: transparent;
+  color: #888;
+  font-size: 10px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+#mobile-toggle:hover {
   border-color: #4a9eff;
   color: #4a9eff;
 }
@@ -313,11 +344,70 @@ body {
 /* ── Responsive adjustments ───────────────────────────── */
 
 @media (max-width: 768px) {
+  /* Show collapse toggle on mobile */
+  #mobile-toggle {
+    display: flex;
+  }
+
+  /* Controls panel: constrained to screen edges with safe-area support */
   #controls {
-    top: 10px;
-    left: 10px;
-    right: 10px;
+    top: max(10px, env(safe-area-inset-top));
+    left: max(10px, env(safe-area-inset-left));
+    right: max(10px, env(safe-area-inset-right));
     min-width: unset;
-    padding: 12px;
+    padding: 10px 12px;
+    max-height: 85vh;
+    overflow-y: auto;
+    /* Smooth collapse/expand animation */
+    transition: padding 0.2s;
+  }
+
+  /* Collapsed state: hide everything except the header */
+  #controls.mobile-collapsed #overlay-slots,
+  #controls.mobile-collapsed #add-overlay-btn,
+  #controls.mobile-collapsed #help-panel,
+  #controls.mobile-collapsed #loading,
+  #controls.mobile-collapsed #info-box {
+    display: none;
+  }
+
+  /* Remove bottom margin from header when collapsed */
+  #controls.mobile-collapsed #controls-header {
+    margin-bottom: 0;
+  }
+
+  /* font-size 16px prevents iOS Safari auto-zoom on input focus */
+  .slot-search {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  /* Larger touch targets for buttons */
+  .slot-clear-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  /* Larger touch targets for dropdown items */
+  .country-item {
+    padding: 11px 10px;
+    font-size: 14px;
+  }
+
+  /* Cap dropdown height relative to viewport */
+  .slot-list {
+    max-height: 40vh;
+  }
+
+  /* Slightly larger compass for easier touch */
+  .slot-compass {
+    width: 40px;
+    height: 40px;
+  }
+
+  .slot-compass-svg {
+    width: 40px;
+    height: 40px;
   }
 }

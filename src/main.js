@@ -70,6 +70,7 @@ class TheTrueSize3DApp {
       this.setupTooltip();
       this.setupOverlayDrag();
       this.setupHelpPanel();
+      this.setupMobileUI();
       this.startOverlayUpdate();
 
       this.hideLoading();
@@ -394,6 +395,31 @@ class TheTrueSize3DApp {
           !helpPanel.contains(e.target) &&
           e.target !== helpBtn) {
         helpPanel.classList.add('hidden');
+      }
+    });
+  }
+
+  setupMobileUI() {
+    const toggleBtn = document.getElementById('mobile-toggle');
+    if (!toggleBtn) return;
+    const controls = document.getElementById('controls');
+    const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+
+    // Start collapsed on mobile so globe is fully visible
+    if (isMobile()) {
+      controls.classList.add('mobile-collapsed');
+      toggleBtn.textContent = '▼';
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      const nowCollapsed = controls.classList.toggle('mobile-collapsed');
+      toggleBtn.textContent = nowCollapsed ? '▼' : '▲';
+    });
+
+    // Remove collapsed state when switching back to desktop width
+    window.addEventListener('resize', () => {
+      if (!isMobile()) {
+        controls.classList.remove('mobile-collapsed');
       }
     });
   }

@@ -4,6 +4,7 @@ An interactive 3D globe web application that allows users to compare the true si
 
 ## Features
 
+- **Mobile-Optimized UI**: Collapsible controls panel on mobile so the globe fills the screen; pinch-to-zoom works correctly via OrbitControls
 - **Interactive 3D Globe**: Rotate and zoom with mouse/touch controls
 - **Country & Subdivision Visualization**: Countries rendered with deterministic colors and flush black outlines; admin1 subdivision borders drawn on top, color-matched to their country
 - **Hover Tooltips**: Hover over any country or subdivision on the globe to see its name in a tooltip
@@ -85,7 +86,8 @@ This builds the project and publishes the `dist/` folder to the `gh-pages` branc
 4. **Compare Sizes**: Rotate the globe while the overlays stay screen-fixed to compare sizes across different regions
 5. **Rotate Overlay**: Drag a slot's compass dial to rotate that overlay independently around the view axis
 6. **Remove a Slot**: Click `×` next to a search field to clear that overlay
-7. **Help**: Click the `?` button at the top of the controls panel to show/hide the usage guide
+7. **Mobile**: On mobile devices the controls panel starts collapsed — tap **▼** to expand it; tap **▲** to collapse and return the globe to full-screen view
+8. **Help**: Click the `?` button at the top of the controls panel to show/hide the usage guide
 8. **Explore**: Try overlaying Greenland on Africa to see how Mercator projection distorts sizes!
 
 ## Project Structure
