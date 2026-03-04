@@ -2,10 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## IMPORTANT INSTRUCTIONS FOR CLAUDE
+## IMPORTANT INSTRUCTIONS FOR CLAUDE - DO NOT IGNORE OR REMOVE
 - Claude must never work directly on main branch. Always use a feature branch.
-- Claude must always update the CLAUDE.md and README.md files when committing changes.
-- Claude must never try to deploy manually. Deployment is handled automatically by GitHub Actions on push to main.
+- Claude must always update the CLAUDE.md and README.md files before committing changes.
+    - CLAUDE.md must be kept concise, it can never be more than 750 words maximum.
+    - README.md is meant for humans. It should focus on project description, usage, and essential info for humans to understand, work with, and contribute to the project. It must be no longer than 750 words.
 - Claude must bump the package version in package.json before submitting a PR.
 
 ## Commands
@@ -20,43 +21,42 @@ No test suite exists.
 
 ## CI/CD
 
-Deployment to GitHub Pages is automated via `.github/workflows/deploy.yml`. Every push or merge to `main` triggers a build and deploy using the GitHub Actions Pages deployment method (`actions/deploy-pages@v4`). The repo's Pages source must be set to "GitHub Actions" in Settings → Pages.
+Deployment to GitHub Pages is automated via `.github/workflows/deploy.yml`. Every push to `main` triggers build and deploy using `actions/deploy-pages@v4`. Pages source must be set to "GitHub Actions" in Settings → Pages.
 
 ## Architecture
 
-TheTrueSize3D is a vanilla JS + Three.js app with no framework. `src/main.js` (`TheTrueSize3DApp` class) is the orchestrator — it instantiates everything else and wires up events.
+Vanilla JS + Three.js app, no framework. `src/main.js` (`TheTrueSize3DApp` class) orchestrates everything. `src/styles.css` contains all app styles.
 
 **Data pipeline:**
-- `CountryLoader.js` fetches `world-atlas@2` TopoJSON (50m resolution) from `public/data/countries-50m.json` (bundled with the site) and converts it to GeoJSON using a custom arc-stitching parser (delta-decode → stitch → GeoJSON features).
-- `SubdivisionLoader.js` fetches Natural Earth 50m admin1 GeoJSON (~2.3 MB) from `public/data/ne_50m_admin_1_states_provinces.geojson` (bundled with the site). Both loaders are fetched in parallel; subdivision failure is non-fatal.
-- Data files are stored in `public/data/` so they are served from the same origin. URLs use `import.meta.env.BASE_URL` to work correctly in both dev and GitHub Pages.
-- `public/CNAME` contains the custom domain (`thetruesize3d.com`). Vite copies it to `dist/` on build so GitHub Pages deploys preserve the custom domain setting.
-- `CountrySelector.js` holds a unified `items` list of `{ id, name, displayName, getFeature }` — countries and admin1 subdivisions share one search field.
+- `CountryLoader.js` fetches TopoJSON (50m, sourced from world-atlas@2 dataset) from `public/data/countries-50m.json` (bundled statically, not an npm dep) and converts to GeoJSON via custom arc-stitching parser (delta-decode → stitch → GeoJSON features).
+- `SubdivisionLoader.js` fetches Natural Earth 50m admin1 GeoJSON (~2.3 MB) from `public/data/ne_50m_admin_1_states_provinces.geojson`. Both loaders fetched in parallel; subdivision failure is non-fatal.
+- Data in `public/data/`, URLs use `import.meta.env.BASE_URL` for dev/GitHub Pages compatibility.
+- `public/CNAME` contains custom domain (`thetruesize3d.com`); Vite copies it to `dist/` on build.
+- `CountrySelector.js` holds a unified `items` list of `{ id, name, displayName, getFeature }` — countries and subdivisions share one search field.
 
-**Rendering:**
-- `Globe.js` manages the Three.js scene (camera, renderer, OrbitControls, lighting). Globe sphere is radius **5.0**. Country polygons are filled with deterministic colors (keyed by `properties.name`, stored in `countryColorMap`) and rendered with black outlines at radius **5.011**. Admin1 subdivision borders are drawn at radius **5.012** as dark-gray lines. Polygons are triangulated using a tangent-plane projection (3D points projected onto a plane at the polygon centroid) and then subdivided to follow sphere curvature. This handles polar polygons (like Antarctica) whose coordinates span the full longitude range. `countryFillMeshes` and `subdivisionHitMeshes` arrays are raycasted on `mousemove` for hover tooltips; raycasting also checks the globe sphere to suppress hits on the far (occluded) side.
-- `CountryOverlay.js` manages up to **3 independent overlay slots** (red/blue/green), each a separate `THREE.Group`. Each slot stores `originalCentroidDir` (fixed unit vector of the country centroid in world space), `displayNDC` (screen-space NDC position, `THREE.Vector2`), and `userRotation` (per-slot compass rotation in radians). Each frame `update()` re-projects `displayNDC` against the globe sphere via analytic ray–sphere intersection using the current camera — this makes overlays fixed to screen position rather than world position, so the globe rotates underneath. Each slot's `userRotation` is applied independently as a negated angle around the camera direction vector (`makeRotationAxis(cameraDir, -slot.userRotation)`). Fill meshes carry `userData.slotIndex` for drag raycasting.
-- The controls panel (top-left) contains the title/help-button header, inline help panel, per-slot search rows, and the attribution footer. The info/attribution links are at the bottom of the controls panel. On mobile (`max-width: 768px`) the panel starts collapsed (only the header row is visible); a `#mobile-toggle` button (▼/▲) in `#controls-header-btns` toggles the `.mobile-collapsed` class to show/hide the rest.
+**Rendering (radius layering: overlay fills 5.005 → country fills 5.01 → country borders 5.011 → subdivision borders 5.012 → subdivision hit meshes 5.015):**
+- `Globe.js` manages the Three.js scene (camera, renderer, OrbitControls, lighting). Globe sphere radius **5.0**. Country fills use deterministic colors (keyed by `properties.name` in `countryColorMap`). Polygons triangulated via tangent-plane projection at centroid, then subdivided for sphere curvature (handles polar polygons like Antarctica). `countryFillMeshes` and `subdivisionHitMeshes` raycasted on `mousemove` for hover tooltips; raycasting checks globe sphere to suppress far-side hits.
+- `CountryOverlay.js` manages **3 overlay slots** (red/blue/green), each a `THREE.Group`. Each slot stores `originalCentroidDir`, `displayNDC` (screen NDC), and `userRotation` (radians). `update()` re-projects `displayNDC` via ray–sphere intersection — overlays are fixed to screen position, globe rotates underneath. Rotation applied as negated angle around camera direction (`makeRotationAxis(cameraDir, -slot.userRotation)`). Fill meshes carry `userData.slotIndex` for drag raycasting.
+- Controls panel (top-left): title/help header, per-slot search rows, attribution footer. On mobile (`max-width: 768px`) starts expanded; `#mobile-toggle` ("▲ Hide" / "▼ Menu") toggles `.mobile-collapsed` class.
 
 **Per-slot compass dials (main.js):**
-- Each overlay slot row includes a 36×36px inline SVG compass (hidden until a region is selected). The compass has a rotating `<g>` with tick marks and an "N" label, plus a static center dot. Dragging rotates the `<g>` by `deg` and calls `overlay.setRotation(slotIndex, radians)` — each slot rotates independently.
+- 36×36px inline SVG compass per slot (hidden until region selected). Rotating `<g>` with tick marks and "N" label. Dragging (mouse or touch) calls `overlay.setRotation(slotIndex, radians)`.
 
 **Coordinate math** (`src/utils/geoUtils.js`):
-- `latLonToVector3(lat, lon, radius)` — standard spherical → Cartesian. All GeoJSON coordinates are WGS84 `[lon, lat]`.
+- `latLonToVector3(lat, lon, radius)` — spherical → Cartesian. GeoJSON coordinates are WGS84 `[lon, lat]`.
 
 ## Key Patterns
 
-- All geo data classes follow the same pattern: `load()` (async fetch + parse), `getXList()` (returns sorted `{id, name, displayName}`), `getXById(id)`.
-- `CountryOverlay._localFrame(dir)` computes a `{right, up, forward}` tangent frame at any point on the unit sphere — used to align the overlay to the camera.
-- Overlay drag: `mousedown` on an overlay fill mesh sets `draggingSlot` and disables OrbitControls. `mousemove` calls `overlay.setDisplayNDC(slotIndex, mouse)` with raw NDC. `mouseup` re-enables OrbitControls. `CountryOverlay.update()` handles the NDC→world projection internally.
-- Known limitation: countries/regions crossing the antimeridian (±180°) like Russia may render with gaps.
+- Geo data classes: `load()` (async fetch + parse), `getXList()` (sorted `{id, name, displayName}`), `getXById(id)`.
+- `CountryOverlay._localFrame(dir)` computes `{right, up, forward}` tangent frame on unit sphere for camera alignment.
+- Overlay drag: `mousedown`/`touchstart` on fill mesh → sets `draggingSlot`, disables OrbitControls. `mousemove`/`touchmove` → `setDisplayNDC()`. `mouseup`/`touchend` → re-enables OrbitControls.
+- Known limitation: antimeridian-crossing regions (±180°, e.g. Russia) may render with gaps.
 
 ## SEO Files
 
-Static files served from `public/` that support search engine visibility:
+Static files in `public/` for search engine visibility:
+- `public/robots.txt` — allows all crawlers, references sitemap.
+- `public/sitemap.xml` — canonical URL with monthly update frequency.
+- `public/og-image.png` — 1200×630 social preview image for OG/Twitter Card tags.
 
-- `public/robots.txt` — Allows all crawlers; references the sitemap URL.
-- `public/sitemap.xml` — Lists the canonical URL `https://thetruesize3d.com/` with monthly update frequency.
-- `public/og-image.png` — 1200×630 PNG social preview image used in Open Graph and Twitter Card meta tags.
-
-`index.html` `<head>` contains: meta description, keywords, canonical URL, Open Graph tags, Twitter Card tags, theme-color, and a `WebApplication` JSON-LD structured-data block.
+`index.html` `<head>`: meta description, keywords, canonical URL, Open Graph, Twitter Card, theme-color, `WebApplication` JSON-LD. `<noscript>` block provides SEO fallback HTML.
