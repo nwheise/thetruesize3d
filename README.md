@@ -59,22 +59,14 @@ The production files will be in the `dist/` directory.
 
 The live site is hosted at **https://thetruesize3d.com**.
 
+Deployment is automated — every push or merge to `main` triggers a GitHub Actions workflow (`.github/workflows/deploy.yml`) that builds the project and deploys to GitHub Pages.
+
 **First-time setup** (only needed once):
 
 1. Push the repository to GitHub.
 2. Go to **Settings → Pages** in the GitHub repo.
-3. Under "Build and deployment", set:
-   - Source: **Deploy from a branch**
-   - Branch: **`gh-pages`** / **`/ (root)`**
+3. Under "Build and deployment", set **Source** to **"GitHub Actions"**.
 4. Click **Save**.
-
-**To deploy:**
-
-```bash
-npm run deploy
-```
-
-This builds the project and publishes the `dist/` folder to the `gh-pages` branch. GitHub Pages will serve the updated site within a minute or two.
 
 > **Note:** Geographic data files are bundled in `public/data/` and served from the same origin — no external CDN fetches at runtime.
 
@@ -112,6 +104,9 @@ thetruesize3d/
 │   ├── utils/
 │   │   └── geoUtils.js    # Coordinate transformation utilities
 │   └── styles.css         # UI styling
+├── .github/
+│   └── workflows/
+│       └── deploy.yml     # Auto-deploy to GitHub Pages on push to main
 ├── CLAUDE.md              # Claude Code guidance
 └── README.md
 ```
