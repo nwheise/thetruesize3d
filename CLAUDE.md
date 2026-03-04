@@ -5,8 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## IMPORTANT INSTRUCTIONS FOR CLAUDE
 - Claude must never work directly on main branch. Always use a feature branch.
 - Claude must always update the CLAUDE.md and README.md files when committing changes.
-- Claude must never try to deploy changes from any branch except for main.
-- Claude must always build the latest changes on main branch before deploying.
+- Claude must never try to deploy manually. Deployment is handled automatically by GitHub Actions on push to main.
 - Claude must bump the package version in package.json before submitting a PR.
 
 ## Commands
@@ -15,7 +14,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev      # Start Vite dev server (http://localhost:5173)
 npm run build    # Production build → dist/
 npm run preview  # Serve production build locally
-npm run deploy   # Build and deploy to GitHub Pages (legacy, uses gh-pages branch)
 ```
 
 No test suite exists.

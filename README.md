@@ -68,14 +68,6 @@ Deployment is automated — every push or merge to `main` triggers a GitHub Acti
 3. Under "Build and deployment", set **Source** to **"GitHub Actions"**.
 4. Click **Save**.
 
-**Manual deploy (legacy):**
-
-```bash
-npm run deploy
-```
-
-This builds the project and publishes the `dist/` folder to the `gh-pages` branch. This is no longer needed with the GitHub Actions workflow in place.
-
 > **Note:** Geographic data files are bundled in `public/data/` and served from the same origin — no external CDN fetches at runtime.
 
 ## Usage
