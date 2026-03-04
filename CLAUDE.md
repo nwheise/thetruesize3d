@@ -57,6 +57,6 @@ Static files served from `public/` that support search engine visibility:
 
 - `public/robots.txt` — Allows all crawlers; references the sitemap URL.
 - `public/sitemap.xml` — Lists the canonical URL `https://thetruesize3d.com/` with monthly update frequency.
-- `public/og-image.svg` — 1200×630 SVG social preview image used in Open Graph and Twitter Card meta tags. For best social sharing support, export this as a PNG (`og-image.png`) and update `index.html` meta tags accordingly.
+- `public/og-image.png` — 1200×630 PNG social preview image used in Open Graph and Twitter Card meta tags.
 
 `index.html` `<head>` contains: meta description, keywords, canonical URL, Open Graph tags, Twitter Card tags, theme-color, and a `WebApplication` JSON-LD structured-data block.

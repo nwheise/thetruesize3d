@@ -93,7 +93,7 @@ thetruesize3d/
 │   ├── CNAME                                         # Custom domain for GitHub Pages
 │   ├── robots.txt                                    # Search engine crawler instructions
 │   ├── sitemap.xml                                   # XML sitemap for search engines
-│   ├── og-image.svg                                  # Social sharing preview image (1200×630)
+│   ├── og-image.png                                   # Social sharing preview image (1200×630)
 │   └── data/
 │       ├── countries-50m.json                      # world-atlas TopoJSON (50m)
 │       └── ne_50m_admin_1_states_provinces.geojson # Natural Earth admin1 GeoJSON
@@ -154,11 +154,9 @@ The site includes the following SEO assets in `public/`:
 |------|---------|
 | `robots.txt` | Instructs crawlers to index the site and points to the sitemap |
 | `sitemap.xml` | XML sitemap listing the canonical URL for search engines |
-| `og-image.svg` | 1200×630 social preview image for Open Graph / Twitter Cards |
+| `og-image.png` | 1200×630 social preview image for Open Graph / Twitter Cards |
 
 The `index.html` `<head>` contains: meta description, keywords, canonical URL, Open Graph tags, Twitter Card tags, and a `WebApplication` JSON-LD structured-data block.
-
-> **Note:** For maximum social-media sharing compatibility, convert `og-image.svg` to `og-image.png` (PNG is more widely supported than SVG by social crawlers) and update the `og:image` / `twitter:image` meta tags accordingly. You can do this with `inkscape --export-type=png public/og-image.svg` or ImageMagick's `convert`.
 
 ## Known Limitations
 
