@@ -48,3 +48,13 @@ TheTrueSize3D is a vanilla JS + Three.js app with no framework. `src/main.js` (`
 - `CountryOverlay._localFrame(dir)` computes a `{right, up, forward}` tangent frame at any point on the unit sphere — used to align the overlay to the camera.
 - Overlay drag: `mousedown` on an overlay fill mesh sets `draggingSlot` and disables OrbitControls. `mousemove` calls `overlay.setDisplayNDC(slotIndex, mouse)` with raw NDC. `mouseup` re-enables OrbitControls. `CountryOverlay.update()` handles the NDC→world projection internally.
 - Known limitation: countries/regions crossing the antimeridian (±180°) like Russia may render with gaps.
+
+## SEO Files
+
+Static files served from `public/` that support search engine visibility:
+
+- `public/robots.txt` — Allows all crawlers; references the sitemap URL.
+- `public/sitemap.xml` — Lists the canonical URL `https://thetruesize3d.com/` with monthly update frequency.
+- `public/og-image.svg` — 1200×630 SVG social preview image used in Open Graph and Twitter Card meta tags. For best social sharing support, export this as a PNG (`og-image.png`) and update `index.html` meta tags accordingly.
+
+`index.html` `<head>` contains: meta description, keywords, canonical URL, Open Graph tags, Twitter Card tags, theme-color, and a `WebApplication` JSON-LD structured-data block.
