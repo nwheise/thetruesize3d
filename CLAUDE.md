@@ -15,10 +15,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev      # Start Vite dev server (http://localhost:5173)
 npm run build    # Production build → dist/
 npm run preview  # Serve production build locally
-npm run deploy   # Build and deploy to GitHub Pages (gh-pages branch)
+npm run deploy   # Build and deploy to GitHub Pages (legacy, uses gh-pages branch)
 ```
 
 No test suite exists.
+
+## CI/CD
+
+Deployment to GitHub Pages is automated via `.github/workflows/deploy.yml`. Every push or merge to `main` triggers a build and deploy using the GitHub Actions Pages deployment method (`actions/deploy-pages@v4`). The repo's Pages source must be set to "GitHub Actions" in Settings → Pages.
 
 ## Architecture
 
@@ -28,7 +32,7 @@ TheTrueSize3D is a vanilla JS + Three.js app with no framework. `src/main.js` (`
 - `CountryLoader.js` fetches `world-atlas@2` TopoJSON (50m resolution) from `public/data/countries-50m.json` (bundled with the site) and converts it to GeoJSON using a custom arc-stitching parser (delta-decode → stitch → GeoJSON features).
 - `SubdivisionLoader.js` fetches Natural Earth 50m admin1 GeoJSON (~2.3 MB) from `public/data/ne_50m_admin_1_states_provinces.geojson` (bundled with the site). Both loaders are fetched in parallel; subdivision failure is non-fatal.
 - Data files are stored in `public/data/` so they are served from the same origin. URLs use `import.meta.env.BASE_URL` to work correctly in both dev and GitHub Pages.
-- `public/CNAME` contains the custom domain (`thetruesize3d.com`). Vite copies it to `dist/` on build so `gh-pages` deploys preserve the GitHub Pages custom domain setting.
+- `public/CNAME` contains the custom domain (`thetruesize3d.com`). Vite copies it to `dist/` on build so GitHub Pages deploys preserve the custom domain setting.
 - `CountrySelector.js` holds a unified `items` list of `{ id, name, displayName, getFeature }` — countries and admin1 subdivisions share one search field.
 
 **Rendering:**
