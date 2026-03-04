@@ -88,9 +88,12 @@ Deployment is automated — every push or merge to `main` triggers a GitHub Acti
 thetruesize3d/
 ├── package.json
 ├── vite.config.js          # Vite config (sets base path for GitHub Pages)
-├── index.html              # HTML structure and UI
+├── index.html              # HTML structure, UI, and SEO meta tags
 ├── public/
 │   ├── CNAME                                         # Custom domain for GitHub Pages
+│   ├── robots.txt                                    # Search engine crawler instructions
+│   ├── sitemap.xml                                   # XML sitemap for search engines
+│   ├── og-image.png                                   # Social sharing preview image (1200×630)
 │   └── data/
 │       ├── countries-50m.json                      # world-atlas TopoJSON (50m)
 │       └── ne_50m_admin_1_states_provinces.geojson # Natural Earth admin1 GeoJSON
@@ -142,6 +145,18 @@ function latLonToVector3(lat, lon, radius) {
 ### Data Pipeline
 
 Both data sources are fetched in parallel on startup. Subdivision failure is non-fatal — the app continues with countries only.
+
+## SEO
+
+The site includes the following SEO assets in `public/`:
+
+| File | Purpose |
+|------|---------|
+| `robots.txt` | Instructs crawlers to index the site and points to the sitemap |
+| `sitemap.xml` | XML sitemap listing the canonical URL for search engines |
+| `og-image.png` | 1200×630 social preview image for Open Graph / Twitter Cards |
+
+The `index.html` `<head>` contains: meta description, keywords, canonical URL, Open Graph tags, Twitter Card tags, and a `WebApplication` JSON-LD structured-data block.
 
 ## Known Limitations
 

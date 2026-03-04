@@ -3,7 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>TheTrueSize3D - Compare Country Sizes</title>
+
+  <!-- Primary SEO -->
+  <title>TheTrueSize3D — Compare Country &amp; Region Sizes on a 3D Globe</title>
+  <meta name="description" content="Compare the true size of countries and regions on an interactive 3D globe. Drag and overlay nations side-by-side to see how they really measure up — a 3D take on The True Size Map.">
+  <meta name="keywords" content="true size, country size comparison, 3D globe, compare countries, the true size map, country size map, region size, interactive globe, world map, geography, mercator distortion, true size 3D, compare regions">
+  <meta name="author" content="nwheise">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://thetruesize3d.com/">
+
+  <!-- Open Graph (Facebook, LinkedIn, Discord, Slack, etc.) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://thetruesize3d.com/">
+  <meta property="og:title" content="TheTrueSize3D — Compare Country Sizes on a 3D Globe">
+  <meta property="og:description" content="See how countries really compare in size. Overlay nations on an interactive 3D globe — inspired by The True Size Map but in three dimensions.">
+  <meta property="og:image" content="https://thetruesize3d.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="TheTrueSize3D interactive 3D globe with country size overlays">
+  <meta property="og:site_name" content="TheTrueSize3D">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://thetruesize3d.com/">
+  <meta name="twitter:title" content="TheTrueSize3D — Compare Country Sizes on a 3D Globe">
+  <meta name="twitter:description" content="See how countries really compare in size. Overlay nations on an interactive 3D globe — inspired by The True Size Map but in three dimensions.">
+  <meta name="twitter:image" content="https://thetruesize3d.com/og-image.png">
+  <meta name="twitter:image:alt" content="TheTrueSize3D interactive 3D globe with country size overlays">
+
+  <!-- Theme / appearance -->
+  <meta name="theme-color" content="#1a1a2e">
+
+  <!-- Structured data (Schema.org WebApplication) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "TheTrueSize3D",
+    "url": "https://thetruesize3d.com/",
+    "description": "Compare the true size of countries and regions on an interactive 3D globe. Drag and overlay nations side-by-side to see how they really measure up.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript and WebGL",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "nwheise",
+      "url": "https://github.com/nwheise"
+    },
+    "sameAs": [
+      "https://github.com/nwheise/thetruesize3d"
+    ],
+    "keywords": "country size comparison, true size map, 3D globe, geography, interactive map"
+  }
+  </script>
+
   <link rel="stylesheet" href="/src/styles.css">
 </head>
 <body>
@@ -37,6 +97,15 @@
     <div id="tooltip"></div>
     <canvas id="globe-canvas"></canvas>
   </div>
+  <!-- SEO content: visible to crawlers, hidden from users -->
+  <noscript>
+    <div style="padding:2rem;font-family:sans-serif;max-width:700px;margin:auto">
+      <h1>TheTrueSize3D — Compare Country &amp; Region Sizes on a 3D Globe</h1>
+      <p>TheTrueSize3D is a free, interactive 3D globe that lets you compare the true size of countries and regions side by side. Inspired by <a href="https://thetruesize.com">The True Size Map</a>, this tool removes the distortion of the Mercator projection by letting you drag and overlay country outlines directly onto a spinning 3D globe.</p>
+      <p>Search for any country or region, overlay up to three at once, drag them around the globe, and see exactly how they measure up against each other. Compare the size of Africa to the United States, Russia to Australia, or any combination you can imagine.</p>
+      <p>This application requires JavaScript and WebGL to run.</p>
+    </div>
+  </noscript>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
