@@ -41,6 +41,31 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
+/* ── Center-on row ────────────────────────────────────── */
+
+#center-on-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+#center-on-label {
+  flex-shrink: 0;
+  color: #888;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  width: 52px;
+  text-align: right;
+}
+
+#center-on-input.is-centering {
+  border-color: #33cc66;
+}
+
 /* ── Overlay slots ────────────────────────────────────── */
 
 #overlay-slots {
@@ -364,6 +389,7 @@ body {
   }
 
   /* Collapsed state: hide everything except the header and help panel */
+  #controls.mobile-collapsed #center-on-row,
   #controls.mobile-collapsed #overlay-slots,
   #controls.mobile-collapsed #add-overlay-btn,
   #controls.mobile-collapsed #loading,

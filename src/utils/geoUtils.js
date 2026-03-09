@@ -34,3 +34,31 @@ export function latLonToVector3(lat, lon, radius) {
 export function coordsToVectors(coordinates, radius) {
   return coordinates.map(([lon, lat]) => latLonToVector3(lat, lon, radius));
 }
+
+/**
+ * Compute the normalised centroid direction of a GeoJSON geometry by averaging
+ * all outer-ring vertices on a unit sphere.
+ *
+ * @param {Object} geometry - GeoJSON Polygon or MultiPolygon geometry
+ * @returns {THREE.Vector3} Normalised direction vector
+ */
+export function computeFeatureCentroidDir(geometry) {
+  const rings =
+    geometry.type === 'Polygon'
+      ? [geometry.coordinates[0]]
+      : geometry.type === 'MultiPolygon'
+        ? geometry.coordinates.map(p => p[0])
+        : [];
+
+  const sum = new THREE.Vector3();
+  let count = 0;
+
+  rings.forEach(ring => {
+    ring.forEach(([lon, lat]) => {
+      sum.add(latLonToVector3(lat, lon, 1));
+      count++;
+    });
+  });
+
+  return count > 0 ? sum.divideScalar(count).normalize() : new THREE.Vector3(0, 0, 1);
+}

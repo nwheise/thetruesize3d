@@ -42,8 +42,13 @@ Vanilla JS + Three.js app, no framework. `src/main.js` (`TheTrueSize3DApp` class
 **Per-slot compass dials (main.js):**
 - 36×36px inline SVG compass per slot (hidden until region selected). Rotating `<g>` with tick marks and "N" label. Dragging (mouse or touch) calls `overlay.setRotation(slotIndex, radians)`.
 
+**Center-on feature (`#center-on-row` in index.html, `setupCenterOn()` in main.js):**
+- Separate `CountrySelector` instance wired to `#center-on-input`/`#center-on-list`/`#center-on-clear`. On select, calls `computeFeatureCentroidDir(geometry)` → `globe.centerOnDirection(dir)`. Input gets `.is-centering` (green border) while active. Manual globe drag fires `onManualDrag` → `centerOnSelector.reset()` + removes class. Clear button fires `onClear` → `cancelCentering()`.
+- `Globe._centerTarget` (Vector3|null): each `animate()` frame lerps `camera.position` toward `_centerTarget` (factor 0.06) before `controls.update()`, so OrbitControls reads the updated position and preserves it. OrbitControls `'start'` event clears `_centerTarget` and fires `onManualDrag`.
+
 **Coordinate math** (`src/utils/geoUtils.js`):
 - `latLonToVector3(lat, lon, radius)` — spherical → Cartesian. GeoJSON coordinates are WGS84 `[lon, lat]`.
+- `computeFeatureCentroidDir(geometry)` — averages outer-ring vertices on unit sphere; used by both `CountryOverlay` and the center-on feature.
 
 ## Key Patterns
 
