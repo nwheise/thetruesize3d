@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { latLonToVector3, coordsToVectors } from './utils/geoUtils.js';
+import { latLonToVector3, coordsToVectors, computeFeatureCentroidDir } from './utils/geoUtils.js';
 
 const OVERLAY_COLORS = [0xff3333, 0x4488ff, 0x33cc66]; // red, blue, green
 const NUM_SLOTS = 3;
@@ -205,24 +205,7 @@ export class CountryOverlay {
 
   /** @private */
   _computeCentroidDirection(geometry) {
-    const rings =
-      geometry.type === 'Polygon'
-        ? [geometry.coordinates[0]]
-        : geometry.type === 'MultiPolygon'
-          ? geometry.coordinates.map(p => p[0])
-          : [];
-
-    const sum = new THREE.Vector3();
-    let count = 0;
-
-    rings.forEach(ring => {
-      ring.forEach(([lon, lat]) => {
-        sum.add(latLonToVector3(lat, lon, 1));
-        count++;
-      });
-    });
-
-    return count > 0 ? sum.divideScalar(count).normalize() : new THREE.Vector3(0, 0, 1);
+    return computeFeatureCentroidDir(geometry);
   }
 
   /**

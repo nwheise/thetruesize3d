@@ -4,6 +4,7 @@ import { CountryLoader } from './CountryLoader.js';
 import { SubdivisionLoader } from './SubdivisionLoader.js';
 import { CountryOverlay } from './CountryOverlay.js';
 import { CountrySelector } from './CountrySelector.js';
+import { computeFeatureCentroidDir } from './utils/geoUtils.js';
 
 // Hex colours matching CountryOverlay OVERLAY_COLORS — used for the dot in the UI
 const SLOT_CSS_COLORS = ['#ff3333', '#4488ff', '#33cc66'];
@@ -71,6 +72,7 @@ class TheTrueSize3DApp {
       this.setupOverlayDrag();
       this.setupHelpPanel();
       this.setupMobileUI();
+      this.setupCenterOn();
       this.startOverlayUpdate();
 
       this.hideLoading();
@@ -420,6 +422,31 @@ class TheTrueSize3DApp {
       if (!isMobile()) {
         controls.classList.remove('mobile-collapsed');
       }
+    });
+  }
+
+  setupCenterOn() {
+    const input    = document.getElementById('center-on-input');
+    const list     = document.getElementById('center-on-list');
+    const clearBtn = document.getElementById('center-on-clear');
+
+    this.centerOnSelector = new CountrySelector(input, list, clearBtn);
+    this.centerOnSelector.setItems(this.allItems);
+
+    this.centerOnSelector.onSelect((feature) => {
+      const dir = computeFeatureCentroidDir(feature.geometry);
+      this.globe.centerOnDirection(dir);
+      input.classList.add('is-centering');
+    });
+
+    this.centerOnSelector.onClear(() => {
+      this.globe.cancelCentering();
+      input.classList.remove('is-centering');
+    });
+
+    this.globe.setManualDragHandler(() => {
+      this.centerOnSelector.reset();
+      input.classList.remove('is-centering');
     });
   }
 

@@ -83,6 +83,13 @@ export class Globe {
     this.controls.dampingFactor = 0.05;
     this.controls.minDistance = 7;
     this.controls.maxDistance = 30;
+
+    this.controls.addEventListener('start', () => {
+      if (this._centerTarget) {
+        this._centerTarget = null;
+        if (this.onManualDrag) this.onManualDrag();
+      }
+    });
   }
 
   setupRaycaster() {
@@ -365,6 +372,27 @@ export class Globe {
   }
 
   /**
+   * Animate the globe so the given direction faces the camera.
+   * @param {THREE.Vector3} dir - Unit vector pointing to the target location
+   */
+  centerOnDirection(dir) {
+    this._centerTarget = dir.clone().normalize();
+  }
+
+  /** Cancel any active centering animation. */
+  cancelCentering() {
+    this._centerTarget = null;
+  }
+
+  /**
+   * Register a callback fired when the user manually drags while centering is active.
+   * @param {Function} callback
+   */
+  setManualDragHandler(callback) {
+    this.onManualDrag = callback;
+  }
+
+  /**
    * Render subdivision (admin1) borders on the globe
    * @param {Array} features - Array of subdivision GeoJSON features
    */
@@ -433,6 +461,17 @@ export class Globe {
    */
   animate() {
     requestAnimationFrame(() => this.animate());
+
+    if (this._centerTarget) {
+      const dist = this.camera.position.length();
+      const currentDir = this.camera.position.clone().normalize();
+      const newDir = currentDir.lerp(this._centerTarget, 0.06).normalize();
+      this.camera.position.copy(newDir.multiplyScalar(dist));
+      if (newDir.dot(this._centerTarget) > 0.9999) {
+        this.camera.position.copy(this._centerTarget.clone().multiplyScalar(dist));
+        this._centerTarget = null;
+      }
+    }
 
     this.controls.update();
     this.renderer.render(this.scene, this.camera);

@@ -11,6 +11,7 @@ An interactive 3D globe that lets you compare the true sizes of countries and re
 - **Hover Tooltips**: Hover over any country or subdivision to see its name
 - **Multiple Overlays**: Compare up to 3 regions simultaneously in red, blue, and green
 - **Screen-Fixed Overlays**: Overlays stay at their screen position while the globe rotates freely underneath
+- **Center On**: Search any country or region to animate the globe to face that location
 - **Drag to Reposition**: Click/tap and drag any overlay to move it on screen
 - **Per-Slot Compass Dials**: Each overlay has its own compass — drag it to rotate that overlay independently
 - **Search**: Per-slot search covering both countries and admin1 subdivisions
@@ -52,15 +53,16 @@ Deployment is automated — every push to `main` triggers a GitHub Actions workf
 
 ## Usage
 
-1. **Select a Region**: Use the search field to find any country or admin1 subdivision
-2. **Add More Overlays**: Click **+ Add Overlay** to add a second or third region (up to 3)
-3. **Drag Overlays**: Click/tap and drag any overlay to reposition it; the globe spins freely underneath
-4. **Compare Sizes**: Rotate the globe while overlays stay screen-fixed to compare across regions
-5. **Rotate Overlay**: Drag a slot's compass dial to rotate that overlay independently
-6. **Remove a Slot**: Click `×` next to a search field to clear that overlay
-7. **Mobile**: On mobile the controls panel starts expanded — tap **▲ Hide** to collapse, **▼ Menu** to expand
-8. **Help**: Click `?` at the top of the controls panel for the usage guide
-9. **Explore**: Try overlaying Greenland on Africa to see how Mercator projection distorts sizes!
+1. **Center On**: Type a country or region in the "Center on" field to animate the globe to face that location (border turns green while animating; manually dragging clears it)
+2. **Select a Region**: Use the slot search field to find any country or admin1 subdivision and overlay it
+3. **Add More Overlays**: Click **+ Add Overlay** to add a second or third region (up to 3)
+4. **Drag Overlays**: Click/tap and drag any overlay to reposition it; the globe spins freely underneath
+5. **Compare Sizes**: Rotate the globe while overlays stay screen-fixed to compare across regions
+6. **Rotate Overlay**: Drag a slot's compass dial to rotate that overlay independently
+7. **Remove a Slot**: Click `×` next to a search field to clear that overlay
+8. **Mobile**: On mobile the controls panel starts expanded — tap **▲ Hide** to collapse, **▼ Menu** to expand
+9. **Help**: Click `?` at the top of the controls panel for the usage guide
+10. **Explore**: Try overlaying Greenland on Africa to see how Mercator projection distorts sizes!
 
 ## Project Structure
 
