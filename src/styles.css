@@ -58,8 +58,6 @@ body {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   white-space: nowrap;
-  width: 52px;
-  text-align: right;
 }
 
 #center-on-input.is-centering {
