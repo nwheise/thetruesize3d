@@ -73,6 +73,7 @@ thetruesize3d/
 ├── index.html                # HTML structure, UI, and SEO meta tags
 ├── public/
 │   ├── CNAME                 # Custom domain for GitHub Pages
+│   ├── favicon.svg           # SVG globe favicon
 │   ├── robots.txt            # Search engine crawler instructions
 │   ├── sitemap.xml           # XML sitemap for search engines
 │   ├── og-image.png          # Social preview image (1200×630)
