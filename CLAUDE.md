@@ -63,5 +63,6 @@ Static files in `public/` for search engine visibility:
 - `public/robots.txt` — allows all crawlers, references sitemap.
 - `public/sitemap.xml` — canonical URL with monthly update frequency.
 - `public/og-image.png` — 1200×630 social preview image for OG/Twitter Card tags.
+- `public/favicon.svg` — SVG globe favicon (dark navy + blue globe with red country-overlay accent).
 
 `index.html` `<head>`: meta description, keywords, canonical URL, Open Graph, Twitter Card, theme-color, `WebApplication` JSON-LD. `<noscript>` block provides SEO fallback HTML.

@@ -1,6 +1,6 @@
 {
   "name": "thetruesize3d",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Compare the true size of countries and regions on an interactive 3D globe. A 3D take on The True Size Map.",
   "main": "index.js",
   "scripts": {
