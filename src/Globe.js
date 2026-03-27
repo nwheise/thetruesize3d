@@ -64,7 +64,7 @@ export class Globe {
     // Create globe sphere
     const geometry = new THREE.SphereGeometry(5, 64, 64);
     const material = new THREE.MeshPhongMaterial({
-      color: 0x2233aa,
+      color: 0x1a2a6e,
       emissive: 0x112244,
       shininess: 10
     });
@@ -167,9 +167,9 @@ export class Globe {
     }
 
     const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x000000,
+      color: 0x0a1020,
       linewidth: 1,
-      opacity: 0.8,
+      opacity: 0.55,
       transparent: true
     });
 
@@ -316,7 +316,7 @@ export class Globe {
     // Map hash to hue 0-280, then skip the blue range (180-260)
     let hue = ((hash >>> 0) % 280);
     if (hue >= 180) hue += 80;
-    return new THREE.Color().setHSL(hue / 360, 0.7, 0.5);
+    return new THREE.Color().setHSL(hue / 360, 0.42, 0.58);
   }
 
   /**
@@ -400,7 +400,7 @@ export class Globe {
     const lineMaterial = new THREE.LineBasicMaterial({
       color: 0x222222,
       linewidth: 1,
-      opacity: 0.7,
+      opacity: 0.4,
       transparent: true
     });
 

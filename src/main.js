@@ -7,7 +7,7 @@ import { CountrySelector } from './CountrySelector.js';
 import { computeFeatureCentroidDir } from './utils/geoUtils.js';
 
 // Hex colours matching CountryOverlay OVERLAY_COLORS — used for the dot in the UI
-const SLOT_CSS_COLORS = ['#ff3333', '#4488ff', '#33cc66'];
+const SLOT_CSS_COLORS = ['#ff7733', '#4488ff', '#33cc66', '#ffcc00', '#cc44ff'];
 
 /**
  * Main application entry point
@@ -87,12 +87,12 @@ class TheTrueSize3DApp {
   // ---------------------------------------------------------------------------
 
   /**
-   * Adds a new overlay slot (up to 3).  Creates the DOM row, CountrySelector,
+   * Adds a new overlay slot (up to 5).  Creates the DOM row, CountrySelector,
    * and wires up callbacks.
    */
   addOverlaySlot() {
-    const slotIndex = this.overlaySlots.length; // 0, 1, or 2
-    if (slotIndex >= 3) return;
+    const slotIndex = this.overlaySlots.length; // 0–4
+    if (slotIndex >= 5) return;
 
     // --- Build DOM row ---
     const row = document.createElement('div');
@@ -228,6 +228,14 @@ class TheTrueSize3DApp {
     });
     document.addEventListener('touchend', onEnd);
 
+    // Double-click to reset rotation to north-up
+    svg.addEventListener('dblclick', (e) => {
+      e.preventDefault();
+      compassRotation = 0;
+      outerG.setAttribute('transform', 'rotate(0)');
+      this.overlay.setRotation(slotIndex, 0);
+    });
+
     // --- CountrySelector ---
     const selector = new CountrySelector(input, list, clearBtn);
     selector.setItems(this.allItems);
@@ -263,10 +271,10 @@ class TheTrueSize3DApp {
     this._updateAddButton();
   }
 
-  /** Show + Add Overlay if < 3 slots; hide it at 3. */
+  /** Show + Add Overlay if < 5 slots; hide it at 5. */
   _updateAddButton() {
     const btn = document.getElementById('add-overlay-btn');
-    if (this.overlaySlots.length >= 3) {
+    if (this.overlaySlots.length >= 5) {
       btn.classList.add('hidden');
     } else {
       btn.classList.remove('hidden');
