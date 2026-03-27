@@ -8,6 +8,8 @@ export class CountrySelector {
     this.listElement = listElement;
     this.clearButton = clearButton;
     this.items = [];
+    this.currentItems = [];
+    this.highlightedIndex = -1;
     this.onSelectCallback = null;
     this.onClearCallback = null;
 
@@ -26,10 +28,11 @@ export class CountrySelector {
    * Render a (possibly filtered) list of items into the dropdown.
    */
   renderList(items) {
+    this.currentItems = items;
     this.listElement.innerHTML = '';
-    items.forEach((item) => {
+    items.forEach((item, index) => {
       const el = document.createElement('div');
-      el.className = 'country-item';
+      el.className = 'country-item' + (index === this.highlightedIndex ? ' highlighted' : '');
       el.textContent = item.displayName;
       el.addEventListener('mousedown', (e) => {
         // mousedown (not click) so it fires before the input's blur
@@ -65,6 +68,29 @@ export class CountrySelector {
       setTimeout(() => this.listElement.classList.add('hidden'), 150);
     });
 
+    this.searchInput.addEventListener('keydown', (e) => {
+      const items = this.currentItems;
+      if (this.listElement.classList.contains('hidden') || items.length === 0) return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        this.highlightedIndex = Math.min(this.highlightedIndex + 1, items.length - 1);
+        this.renderList(items);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        this.highlightedIndex = Math.max(this.highlightedIndex - 1, 0);
+        this.renderList(items);
+      } else if (e.key === 'Enter') {
+        if (this.highlightedIndex >= 0) {
+          e.preventDefault();
+          this.selectItem(items[this.highlightedIndex]);
+        }
+      } else if (e.key === 'Escape') {
+        this.listElement.classList.add('hidden');
+        this.searchInput.blur();
+      }
+    });
+
     this.clearButton.addEventListener('click', () => {
       if (this.onClearCallback) this.onClearCallback();
       this.reset();
@@ -72,6 +98,7 @@ export class CountrySelector {
   }
 
   filterAndShow(query) {
+    this.highlightedIndex = -1;
     const q = query.toLowerCase().trim();
     const filtered = q
       ? this.items.filter(item =>

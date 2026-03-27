@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { latLonToVector3, coordsToVectors, computeFeatureCentroidDir } from './utils/geoUtils.js';
 
-const OVERLAY_COLORS = [0xff3333, 0x4488ff, 0x33cc66]; // red, blue, green
-const NUM_SLOTS = 3;
+const OVERLAY_COLORS = [0xff7733, 0x4488ff, 0x33cc66, 0xffcc00, 0xcc44ff]; // orange, blue, green, yellow, purple
+const NUM_SLOTS = 5;
 
 /**
- * Manages up to 3 independent country overlay slots on the globe.
+ * Manages up to 5 independent country overlay slots on the globe.
  *
  * Each slot has its own Three.js Group whose orientation is updated every frame
  * so the country's centroid faces the camera and geographic north maps to
@@ -42,7 +42,7 @@ export class CountryOverlay {
   /**
    * Show a country on the given slot.
    * @param {Object} country - GeoJSON feature
-   * @param {number} slotIndex - 0, 1, or 2
+   * @param {number} slotIndex - 0–4
    */
   show(country, slotIndex) {
     this.clear(slotIndex);
@@ -64,7 +64,7 @@ export class CountryOverlay {
     const fillMaterial = new THREE.MeshBasicMaterial({
       color: slot.color,
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.6,
       side: THREE.DoubleSide,
       depthTest: false,
       depthWrite: false,
@@ -300,7 +300,7 @@ export class CountryOverlay {
       color: lineColor,
       linewidth: 2,
       transparent: true,
-      opacity: 0.8,
+      opacity: 0.92,
       depthTest: false,
       depthWrite: false,
     });

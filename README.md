@@ -9,12 +9,12 @@ An interactive 3D globe that lets you compare the true sizes of countries and re
 - **Interactive 3D Globe**: Rotate and zoom with mouse or touch controls
 - **Country & Subdivision Visualization**: Countries rendered with deterministic colors and black outlines; admin1 subdivision borders drawn on top
 - **Hover Tooltips**: Hover over any country or subdivision to see its name
-- **Multiple Overlays**: Compare up to 3 regions simultaneously in red, blue, and green
+- **Multiple Overlays**: Compare up to 5 regions simultaneously in distinct colors
 - **Screen-Fixed Overlays**: Overlays stay at their screen position while the globe rotates freely underneath
 - **Center On**: Search any country or region to animate the globe to face that location
 - **Drag to Reposition**: Click/tap and drag any overlay to move it on screen
-- **Per-Slot Compass Dials**: Each overlay has its own compass — drag it to rotate that overlay independently
-- **Search**: Per-slot search covering both countries and admin1 subdivisions
+- **Per-Slot Compass Dials**: Each overlay has its own compass — drag to rotate, double-click to reset to north-up
+- **Search**: Per-slot search covering both countries and admin1 subdivisions; supports arrow key + Enter keyboard navigation
 - **Mobile-Optimized**: Collapsible controls panel; pinch-to-zoom works via OrbitControls
 - **Help Panel**: Click `?` to reveal an in-app usage guide
 
@@ -55,7 +55,7 @@ Deployment is automated — every push to `main` triggers a GitHub Actions workf
 
 1. **Center On**: Type a country or region in the "Center on" field to animate the globe to face that location (border turns green while animating; manually dragging clears it)
 2. **Select a Region**: Use the slot search field to find any country or admin1 subdivision and overlay it
-3. **Add More Overlays**: Click **+ Add Overlay** to add a second or third region (up to 3)
+3. **Add More Overlays**: Click **+ Add Overlay** to add more regions (up to 5)
 4. **Drag Overlays**: Click/tap and drag any overlay to reposition it; the globe spins freely underneath
 5. **Compare Sizes**: Rotate the globe while overlays stay screen-fixed to compare across regions
 6. **Rotate Overlay**: Drag a slot's compass dial to rotate that overlay independently

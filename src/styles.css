@@ -184,7 +184,8 @@ body {
   cursor: pointer;
 }
 
-.country-item:hover {
+.country-item:hover,
+.country-item.highlighted {
   background-color: #2a2a4e;
 }
 
